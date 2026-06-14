@@ -1,0 +1,43 @@
+version: "2"
+linters:
+  enable:
+    - goconst
+    - gosec
+    - misspell
+    - nakedret
+    - revive
+    - unconvert
+  # `lll` (from the upstream template) is intentionally omitted: infer's generic
+  # CRUD method signatures are inherently long and don't benefit from wrapping.
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - schema.go
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gci
+    - gofmt
+  settings:
+    gci:
+      sections:
+        - standard
+        - blank
+        - default
+        - prefix(github.com/pulumi/)
+        - prefix(github.com/hummingbird-me/pulumi-postmark)
+      custom-order: true
+  exclusions:
+    generated: lax
+    paths:
+      - schema.go
+      - third_party$
+      - builtin$
+      - examples$

@@ -1,76 +1,137 @@
-PACK         := postmark
-ORG          := hummingbird-me
-PROJECT      := github.com/$(ORG)/pulumi-$(PACK)
-PROVIDER     := pulumi-resource-$(PACK)
-VERSION      ?= 0.1.0
-VERSION_PATH := $(PROJECT)/provider/version.Version
+PROJECT_NAME := Pulumi Postmark Provider
 
-WORKING_DIR  := $(shell pwd)
-SCHEMA_FILE  := $(WORKING_DIR)/provider/cmd/$(PROVIDER)/schema.json
-GOSDK_MODULE := $(PROJECT)/sdk
+PACK             := postmark
+PACKDIR          := sdk
+PROJECT          := github.com/hummingbird-me/pulumi-postmark
+NODE_MODULE_NAME := @kitsu-io/pulumi-postmark
+NUGET_PKG_NAME   := HummingbirdMe.Postmark
 
-PULUMI := pulumi
+PROVIDER        := pulumi-resource-${PACK}
+PROVIDER_PATH   := provider
+VERSION_PATH    := ${PROVIDER_PATH}.Version
 
-.PHONY: provider install schema gen_go_sdk gen_python_sdk gen_nodejs_sdk gen_dotnet_sdk gen_java_sdk build_sdks build lint test test_unit clean tidy ensure
+PULUMI          := pulumi
 
-# --- provider binary ---------------------------------------------------------
+SCHEMA_FILE     := provider/cmd/pulumi-resource-${PACK}/schema.json
+export GOPATH   := $(shell go env GOPATH)
 
-provider:
-	cd provider && go build -o $(WORKING_DIR)/bin/$(PROVIDER) \
-		-ldflags "-X $(VERSION_PATH)=$(VERSION)" \
-		$(PROJECT)/provider/cmd/$(PROVIDER)
+WORKING_DIR     := $(shell pwd)
+TESTPARALLELISM := 4
 
-install: provider
-	cp $(WORKING_DIR)/bin/$(PROVIDER) $(shell go env GOPATH)/bin/$(PROVIDER)
+# Override during CI using `make [TARGET] PROVIDER_VERSION=""` or by setting a PROVIDER_VERSION environment variable.
+# Local & branch builds just use this fixed default version unless specified.
+PROVIDER_VERSION ?= 1.0.0-alpha.0+dev
+# Use this normalised version everywhere rather than the raw input to ensure consistency.
+VERSION_GENERIC = $(shell pulumictl convert-version --language generic --version "$(PROVIDER_VERSION)")
 
-# --- schema ------------------------------------------------------------------
+# Pick up locally pinned pulumi-language-* plugins.
+export PULUMI_IGNORE_AMBIENT_PLUGINS = true
 
-# Emit the checked-in schema.json from the freshly built binary (version stripped
-# so the file is stable across releases). CI should `git diff --exit-code` this.
-schema: provider
-	$(PULUMI) package get-schema $(WORKING_DIR)/bin/$(PROVIDER) | jq 'del(.version)' > $(SCHEMA_FILE)
+ensure::
+	go mod tidy
 
-# --- SDKs --------------------------------------------------------------------
+$(SCHEMA_FILE): provider
+	$(PULUMI) package get-schema $(WORKING_DIR)/bin/${PROVIDER} | \
+		jq 'del(.version)' > $(SCHEMA_FILE)
 
-gen_go_sdk: provider
-	rm -rf sdk/go
-	$(PULUMI) package gen-sdk --language go $(WORKING_DIR)/bin/$(PROVIDER) --out sdk --version $(VERSION)
-	cd sdk && (test -f go.mod || go mod init $(GOSDK_MODULE)) && go mod tidy
+# Codegen generates the schema file and *generates* all SDK sources. This is a local
+# process that does not require the ability to compile the SDKs. To compile them, use
+# `make build_sdks`.
+codegen: $(SCHEMA_FILE) sdk/dotnet sdk/go sdk/nodejs sdk/python sdk/java
 
-gen_python_sdk: provider
-	rm -rf sdk/python
-	$(PULUMI) package gen-sdk --language python $(WORKING_DIR)/bin/$(PROVIDER) --out sdk --version $(VERSION)
+.PHONY: sdk/%
+sdk/%: $(SCHEMA_FILE)
+	rm -rf $@
+	$(PULUMI) package gen-sdk --language $* $(SCHEMA_FILE) --version "${VERSION_GENERIC}"
 
-gen_nodejs_sdk: provider
-	rm -rf sdk/nodejs
-	$(PULUMI) package gen-sdk --language nodejs $(WORKING_DIR)/bin/$(PROVIDER) --out sdk --version $(VERSION)
+sdk/python: $(SCHEMA_FILE)
+	rm -rf $@
+	$(PULUMI) package gen-sdk --language python $(SCHEMA_FILE) --version "${VERSION_GENERIC}"
+	cp README.md ${PACKDIR}/python/
 
-gen_dotnet_sdk: provider
-	rm -rf sdk/dotnet
-	$(PULUMI) package gen-sdk --language dotnet $(WORKING_DIR)/bin/$(PROVIDER) --out sdk --version $(VERSION)
+sdk/go: $(SCHEMA_FILE)
+	rm -rf $@
+	$(PULUMI) package gen-sdk --language go $(SCHEMA_FILE) --version "${VERSION_GENERIC}"
+	cp go.mod ${PACKDIR}/go/pulumi-${PACK}/go.mod
+	cd ${PACKDIR}/go/pulumi-${PACK} && \
+		go mod edit -module=${PROJECT}/${PACKDIR}/go/pulumi-${PACK} && \
+		go mod tidy
 
-gen_java_sdk: provider
-	rm -rf sdk/java
-	$(PULUMI) package gen-sdk --language java $(WORKING_DIR)/bin/$(PROVIDER) --out sdk --version $(VERSION)
+.PHONY: provider
+provider: bin/${PROVIDER}
 
-build_sdks: gen_go_sdk gen_python_sdk gen_nodejs_sdk gen_dotnet_sdk gen_java_sdk
+bin/${PROVIDER}:
+	cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} \
+		-ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION_GENERIC}" \
+		$(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER)
 
-build: provider schema build_sdks
+.PHONY: provider_debug
+provider_debug:
+	cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -gcflags="all=-N -l" \
+		-ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION_GENERIC}" \
+		$(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER)
 
-# --- quality -----------------------------------------------------------------
+test_provider:
+	go test -short -v -count=1 -cover -timeout 2h -parallel ${TESTPARALLELISM} ./provider/...
 
-tidy:
-	cd provider && go mod tidy
+dotnet_sdk: sdk/dotnet
+	cd ${PACKDIR}/dotnet/ && \
+		echo "${VERSION_GENERIC}" > version.txt && \
+		dotnet build
+
+go_sdk: sdk/go
+
+nodejs_sdk: sdk/nodejs
+	cd ${PACKDIR}/nodejs/ && \
+		yarn install && \
+		yarn run tsc
+	cp README.md LICENSE ${PACKDIR}/nodejs/package.json ${PACKDIR}/nodejs/yarn.lock ${PACKDIR}/nodejs/bin/
+
+python_sdk: sdk/python
+	cp README.md ${PACKDIR}/python/
+	cd ${PACKDIR}/python/ && \
+		rm -rf ./bin/ ../python.bin/ && cp -R . ../python.bin && mv ../python.bin ./bin && \
+		python3 -m venv venv && \
+		./venv/bin/python -m pip install build && \
+		cd ./bin && \
+		../venv/bin/python -m build .
+
+java_sdk:: PACKAGE_VERSION := $(VERSION_GENERIC)
+java_sdk:: sdk/java
+	cd sdk/java/ && \
+		gradle --console=plain build
+
+.PHONY: build
+build:: provider build_sdks
+
+.PHONY: build_sdks
+build_sdks: dotnet_sdk go_sdk nodejs_sdk python_sdk java_sdk
 
 lint:
-	cd provider && go vet ./... && gofmt -l .
+	golangci-lint --config .golangci.yml run --fix
 
-test_unit:
-	cd provider && go test ./...
+install:: install_nodejs_sdk
+	cp $(WORKING_DIR)/bin/${PROVIDER} ${GOPATH}/bin
 
-test: test_unit
+GO_TEST := go test -v -count=1 -cover -timeout 2h -parallel ${TESTPARALLELISM}
 
-clean:
-	rm -rf bin
+test:: test_provider
+	cd examples/simple && go build ./...
 
-ensure: tidy
+install_dotnet_sdk::
+	rm -rf $(WORKING_DIR)/nuget/$(NUGET_PKG_NAME).*.nupkg
+	mkdir -p $(WORKING_DIR)/nuget
+	find . -name '*.nupkg' -print -exec cp -p {} ${WORKING_DIR}/nuget \;
+
+install_python_sdk::
+	#target intentionally blank
+
+install_go_sdk::
+	#target intentionally blank
+
+install_java_sdk::
+	#target intentionally blank
+
+install_nodejs_sdk::
+	-yarn unlink --cwd $(WORKING_DIR)/sdk/nodejs/bin
+	yarn link --cwd $(WORKING_DIR)/sdk/nodejs/bin

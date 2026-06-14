@@ -1,13 +1,23 @@
+/vendor/
 /bin/
 /dist/
-*.exe
-
-# Pulumi
+**/bin/
+**/obj/
+**/node_modules/
+**/.vs
+**/.idea
+**/.ionide
+.pulumi
 Pulumi.*.yaml
-.pulumi/
+yarn.lock
+/nuget/
+provider/**/schema-embed.json
 
-# Go
-vendor/
+sdk/dotnet/version.txt
+sdk/java/.gradle
+sdk/java/build/
+sdk/java/build.gradle
+sdk/python/venv
 
 # compiled example binaries
 /examples/simple/postmark-example
