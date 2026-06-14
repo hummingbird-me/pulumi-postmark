@@ -8,18 +8,12 @@ import (
 	"fmt"
 	"os"
 
-	provider "github.com/hummingbird-me/pulumi-postmark/provider"
-	"github.com/hummingbird-me/pulumi-postmark/provider/version"
+	postmark "github.com/hummingbird-me/pulumi-postmark/provider"
 )
 
 func main() {
-	prov, err := provider.Provider()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "failed to construct postmark provider: %v\n", err)
-		os.Exit(1)
-	}
-	if err := prov.Run(context.Background(), provider.Name, version.Version); err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
+	if err := postmark.Provider().Run(context.Background(), postmark.Name, postmark.Version); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %s\n", err.Error())
 		os.Exit(1)
 	}
 }

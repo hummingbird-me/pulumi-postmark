@@ -5,18 +5,22 @@
 package provider
 
 import (
+	"fmt"
+
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
 )
 
-// Name is the Pulumi package name and the resource-token prefix
-// (e.g. postmark:index:Server). It must match the plugin binary name
-// pulumi-resource-postmark.
-const Name = "postmark"
+// Version is initialized by the Go linker to contain the semver of this build.
+var Version string
 
-// Provider builds the inferred Postmark provider.
-func Provider() (p.Provider, error) {
-	return infer.NewProviderBuilder().
+// Name controls how this provider is referenced in package names and elsewhere.
+const Name string = "postmark"
+
+// Provider creates a new instance of the Postmark provider.
+func Provider() p.Provider {
+	prov, err := infer.NewProviderBuilder().
 		WithNamespace("hummingbird-me").
 		WithDisplayName("Postmark").
 		WithDescription("A Pulumi provider for managing Postmark email infrastructure: "+
@@ -25,9 +29,9 @@ func Provider() (p.Provider, error) {
 		WithLicense("Apache-2.0").
 		WithRepository("https://github.com/hummingbird-me/pulumi-postmark").
 		WithKeywords("postmark", "email", "transactional-email", "category/network").
-		// LanguageMap mirrors the framework defaults, overriding only the npm
-		// package name (published under the kitsu-io scope). WithGoImportPath
-		// below mutates the "go" entry of this same map, so it must come after.
+		// Mirror the framework defaults, overriding only the npm package name
+		// (published under the kitsu-io scope). WithGoImportPath below mutates the
+		// "go" entry of this same map, so it must come after.
 		WithLanguageMap(map[string]any{
 			"nodejs": map[string]any{
 				"respectSchemaVersion": true,
@@ -45,9 +49,12 @@ func Provider() (p.Provider, error) {
 				"respectSchemaVersion": true,
 			},
 		}).
-		WithGoImportPath("github.com/hummingbird-me/pulumi-postmark/sdk/go/postmark").
+		WithGoImportPath("github.com/hummingbird-me/pulumi-postmark/sdk/go/pulumi-postmark").
 		WithPluginDownloadURL("github://api.github.com/hummingbird-me/pulumi-postmark").
 		WithConfig(infer.Config(Config{})).
+		WithModuleMap(map[tokens.ModuleName]tokens.ModuleName{
+			"provider": "index",
+		}).
 		WithResources(
 			infer.Resource(&Server{}),
 			infer.Resource(&Domain{}),
@@ -56,4 +63,8 @@ func Provider() (p.Provider, error) {
 			infer.Resource(&Template{}),
 		).
 		Build()
+	if err != nil {
+		panic(fmt.Errorf("unable to build provider: %w", err))
+	}
+	return prov
 }

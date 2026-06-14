@@ -9,12 +9,10 @@ import (
 )
 
 // TestProviderBuilds ensures the provider's schema can be inferred from all
-// resource definitions without error. This catches malformed pulumi struct tags,
-// duplicate tokens, and other schema-generation regressions.
+// resource definitions. Provider() panics on a schema-generation error, so this
+// catches malformed pulumi struct tags, duplicate tokens, and similar regressions.
 func TestProviderBuilds(t *testing.T) {
-	if _, err := Provider(); err != nil {
-		t.Fatalf("Provider() returned an error: %v", err)
-	}
+	_ = Provider()
 }
 
 func TestIsNotFound(t *testing.T) {

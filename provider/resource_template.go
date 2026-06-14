@@ -25,8 +25,6 @@ var (
 	_ infer.CustomCheck[TemplateArgs]                   = (*Template)(nil)
 )
 
-func (*Template) Annotate(a infer.Annotator) { a.SetToken("index", "Template") }
-
 type TemplateArgs struct {
 	Name           string  `pulumi:"name"`
 	Alias          *string `pulumi:"alias,optional"`

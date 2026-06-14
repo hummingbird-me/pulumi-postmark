@@ -23,8 +23,6 @@ var (
 	_ infer.CustomDelete[DomainVerificationState]                           = (*DomainVerification)(nil)
 )
 
-func (*DomainVerification) Annotate(a infer.Annotator) { a.SetToken("index", "DomainVerification") }
-
 type DomainVerificationArgs struct {
 	DomainID           int     `pulumi:"domainId" provider:"replaceOnChanges"`
 	VerifyDKIM         *bool   `pulumi:"verifyDkim,optional"`

@@ -23,8 +23,6 @@ var (
 	_ infer.CustomDelete[ServerState]               = (*Server)(nil)
 )
 
-func (*Server) Annotate(a infer.Annotator) { a.SetToken("index", "Server") }
-
 type ServerArgs struct {
 	Name                       string  `pulumi:"name"`
 	Color                      *string `pulumi:"color,optional"`

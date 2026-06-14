@@ -23,8 +23,6 @@ var (
 	_ infer.CustomDelete[SenderSignatureState]                        = (*SenderSignature)(nil)
 )
 
-func (*SenderSignature) Annotate(a infer.Annotator) { a.SetToken("index", "SenderSignature") }
-
 type SenderSignatureArgs struct {
 	FromEmail                string  `pulumi:"fromEmail" provider:"replaceOnChanges"`
 	Name                     string  `pulumi:"name"`

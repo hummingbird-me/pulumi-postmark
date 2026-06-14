@@ -21,8 +21,6 @@ var (
 	_ infer.CustomDelete[DomainState]               = (*Domain)(nil)
 )
 
-func (*Domain) Annotate(a infer.Annotator) { a.SetToken("index", "Domain") }
-
 type DomainArgs struct {
 	Name             string  `pulumi:"name" provider:"replaceOnChanges"`
 	ReturnPathDomain *string `pulumi:"returnPathDomain,optional"`
