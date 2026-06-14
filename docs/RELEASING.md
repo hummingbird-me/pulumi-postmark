@@ -71,8 +71,10 @@ one-time bootstrap, then tokenless forever after:
    ```bash
    cd sdk/nodejs && npm install && npm run build
    cp ../../README.md ../../LICENSE package.json bin/
-   cd bin && npm publish --access public --provenance
+   cd bin && npm publish --access public
    ```
+   (No `--provenance` here — provenance needs the CI OIDC environment; the local
+   bootstrap publishes without it. Every later OIDC release gets provenance automatically.)
 2. **Configure the Trusted Publisher** on npmjs.com → the package → Settings →
    Trusted Publisher → GitHub Actions, with repo `hummingbird-me/pulumi-postmark`
    and workflow file `publish-sdks.yml`.
