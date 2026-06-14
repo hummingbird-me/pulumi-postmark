@@ -23,6 +23,7 @@
       "respectSchemaVersion": true
     },
     "nodejs": {
+      "packageName": "@kitsu-io/pulumi-postmark",
       "respectSchemaVersion": true
     },
     "python": {

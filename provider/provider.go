@@ -25,6 +25,26 @@ func Provider() (p.Provider, error) {
 		WithLicense("Apache-2.0").
 		WithRepository("https://github.com/hummingbird-me/pulumi-postmark").
 		WithKeywords("postmark", "email", "transactional-email", "category/network").
+		// LanguageMap mirrors the framework defaults, overriding only the npm
+		// package name (published under the kitsu-io scope). WithGoImportPath
+		// below mutates the "go" entry of this same map, so it must come after.
+		WithLanguageMap(map[string]any{
+			"nodejs": map[string]any{
+				"respectSchemaVersion": true,
+				"packageName":          "@kitsu-io/pulumi-postmark",
+			},
+			"go": map[string]any{
+				"generateResourceContainerTypes": true,
+				"respectSchemaVersion":           true,
+			},
+			"python": map[string]any{
+				"respectSchemaVersion": true,
+				"pyproject":            map[string]any{"enabled": true},
+			},
+			"csharp": map[string]any{
+				"respectSchemaVersion": true,
+			},
+		}).
 		WithGoImportPath("github.com/hummingbird-me/pulumi-postmark/sdk/go/postmark").
 		WithPluginDownloadURL("github://api.github.com/hummingbird-me/pulumi-postmark").
 		WithConfig(infer.Config(Config{})).

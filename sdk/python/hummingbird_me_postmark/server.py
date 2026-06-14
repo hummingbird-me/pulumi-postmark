@@ -36,12 +36,12 @@ class ServerArgs:
         The set of arguments for constructing a Server resource.
 
         :param pulumi.Input[_builtins.str] name: Friendly name of the server.
-        :param pulumi.Input[_builtins.str] color: Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+        :param pulumi.Input[_builtins.str] color: Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
         :param pulumi.Input[_builtins.str] delivery_type: Environment type: `Live` or `Sandbox`. Immutable after creation — changing it replaces the server. Defaults to `Live`.
         :param pulumi.Input[_builtins.str] inbound_domain: Inbound domain for MX setup. Point an MX record for this domain at `inbound.postmarkapp.com` to receive mail.
         :param pulumi.Input[_builtins.str] inbound_hook_url: URL Postmark POSTs to for every inbound email event.
         :param pulumi.Input[_builtins.int] inbound_spam_threshold: Maximum spam score before an inbound message is blocked.
-        :param pulumi.Input[_builtins.str] track_links: Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+        :param pulumi.Input[_builtins.str] track_links: Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
         :param pulumi.Input[_builtins.bool] track_opens: Enable open tracking for messages by default.
         """
         pulumi.set(__self__, "name", name)
@@ -86,7 +86,7 @@ class ServerArgs:
     @pulumi.getter
     def color(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+        Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
         """
         return pulumi.get(self, "color")
 
@@ -191,7 +191,7 @@ class ServerArgs:
     @pulumi.getter(name="trackLinks")
     def track_links(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
-        Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+        Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
         """
         return pulumi.get(self, "track_links")
 
@@ -237,13 +237,13 @@ class Server(pulumi.CustomResource):
 
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
-        :param pulumi.Input[_builtins.str] color: Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+        :param pulumi.Input[_builtins.str] color: Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
         :param pulumi.Input[_builtins.str] delivery_type: Environment type: `Live` or `Sandbox`. Immutable after creation — changing it replaces the server. Defaults to `Live`.
         :param pulumi.Input[_builtins.str] inbound_domain: Inbound domain for MX setup. Point an MX record for this domain at `inbound.postmarkapp.com` to receive mail.
         :param pulumi.Input[_builtins.str] inbound_hook_url: URL Postmark POSTs to for every inbound email event.
         :param pulumi.Input[_builtins.int] inbound_spam_threshold: Maximum spam score before an inbound message is blocked.
         :param pulumi.Input[_builtins.str] name: Friendly name of the server.
-        :param pulumi.Input[_builtins.str] track_links: Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+        :param pulumi.Input[_builtins.str] track_links: Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
         :param pulumi.Input[_builtins.bool] track_opens: Enable open tracking for messages by default.
         """
         ...
@@ -367,7 +367,7 @@ class Server(pulumi.CustomResource):
     @pulumi.getter
     def color(self) -> pulumi.Output[Optional[_builtins.str]]:
         """
-        Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+        Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
         """
         return pulumi.get(self, "color")
 
@@ -460,7 +460,7 @@ class Server(pulumi.CustomResource):
     @pulumi.getter(name="trackLinks")
     def track_links(self) -> pulumi.Output[Optional[_builtins.str]]:
         """
-        Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+        Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
         """
         return pulumi.get(self, "track_links")
 

@@ -17,7 +17,7 @@ namespace HummingbirdMe.Postmark
         public Output<ImmutableArray<string>> ApiTokens { get; private set; } = null!;
 
         /// <summary>
-        /// Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+        /// Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
         /// </summary>
         [Output("color")]
         public Output<string?> Color { get; private set; } = null!;
@@ -80,7 +80,7 @@ namespace HummingbirdMe.Postmark
         public Output<bool?> SmtpApiActivated { get; private set; } = null!;
 
         /// <summary>
-        /// Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+        /// Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
         /// </summary>
         [Output("trackLinks")]
         public Output<string?> TrackLinks { get; private set; } = null!;
@@ -146,7 +146,7 @@ namespace HummingbirdMe.Postmark
     public sealed class ServerArgs : global::Pulumi.ResourceArgs
     {
         /// <summary>
-        /// Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+        /// Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
         /// </summary>
         [Input("color")]
         public Input<string>? Color { get; set; }
@@ -197,7 +197,7 @@ namespace HummingbirdMe.Postmark
         public Input<bool>? SmtpApiActivated { get; set; }
 
         /// <summary>
-        /// Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+        /// Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
         /// </summary>
         [Input("trackLinks")]
         public Input<string>? TrackLinks { get; set; }

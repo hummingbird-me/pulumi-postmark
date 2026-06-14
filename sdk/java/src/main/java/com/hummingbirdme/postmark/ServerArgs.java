@@ -19,14 +19,14 @@ public final class ServerArgs extends com.pulumi.resources.ResourceArgs {
     public static final ServerArgs Empty = new ServerArgs();
 
     /**
-     * Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+     * Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
      * 
      */
     @Import(name="color")
     private @Nullable Output<String> color;
 
     /**
-     * @return Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+     * @return Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
      * 
      */
     public Optional<Output<String>> color() {
@@ -144,14 +144,14 @@ public final class ServerArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
-     * Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+     * Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
      * 
      */
     @Import(name="trackLinks")
     private @Nullable Output<String> trackLinks;
 
     /**
-     * @return Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+     * @return Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
      * 
      */
     public Optional<Output<String>> trackLinks() {
@@ -210,7 +210,7 @@ public final class ServerArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param color Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+         * @param color Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
          * 
          * @return builder
          * 
@@ -221,7 +221,7 @@ public final class ServerArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param color Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+         * @param color Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
          * 
          * @return builder
          * 
@@ -381,7 +381,7 @@ public final class ServerArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param trackLinks Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+         * @param trackLinks Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
          * 
          * @return builder
          * 
@@ -392,7 +392,7 @@ public final class ServerArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param trackLinks Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+         * @param trackLinks Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
          * 
          * @return builder
          * 

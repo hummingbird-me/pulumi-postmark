@@ -25,14 +25,14 @@ public class Server extends com.pulumi.resources.CustomResource {
         return this.apiTokens;
     }
     /**
-     * Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+     * Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
      * 
      */
     @Export(name="color", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> color;
 
     /**
-     * @return Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+     * @return Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
      * 
      */
     public Output<Optional<String>> color() {
@@ -163,14 +163,14 @@ public class Server extends com.pulumi.resources.CustomResource {
         return Codegen.optional(this.smtpApiActivated);
     }
     /**
-     * Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+     * Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
      * 
      */
     @Export(name="trackLinks", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> trackLinks;
 
     /**
-     * @return Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+     * @return Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
      * 
      */
     public Output<Optional<String>> trackLinks() {

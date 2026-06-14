@@ -1,5 +1,5 @@
 {
-    "name": "@hummingbird-me/postmark",
+    "name": "@kitsu-io/pulumi-postmark",
     "version": "0.1.0",
     "keywords": [
         "postmark",

@@ -33,7 +33,7 @@ export class Server extends pulumi.CustomResource {
 
     declare public /*out*/ readonly apiTokens: pulumi.Output<string[]>;
     /**
-     * Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+     * Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
      */
     declare public readonly color: pulumi.Output<string | undefined>;
     /**
@@ -66,7 +66,7 @@ export class Server extends pulumi.CustomResource {
     declare public /*out*/ readonly serverLink: pulumi.Output<string>;
     declare public readonly smtpApiActivated: pulumi.Output<boolean | undefined>;
     /**
-     * Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+     * Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
      */
     declare public readonly trackLinks: pulumi.Output<string | undefined>;
     /**
@@ -140,7 +140,7 @@ export class Server extends pulumi.CustomResource {
  */
 export interface ServerArgs {
     /**
-     * Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+     * Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
      */
     color?: pulumi.Input<string>;
     /**
@@ -169,7 +169,7 @@ export interface ServerArgs {
     rawEmailEnabled?: pulumi.Input<boolean>;
     smtpApiActivated?: pulumi.Input<boolean>;
     /**
-     * Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+     * Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
      */
     trackLinks?: pulumi.Input<string>;
     /**

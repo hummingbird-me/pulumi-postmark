@@ -16,7 +16,7 @@ type Server struct {
 	pulumi.CustomResourceState
 
 	ApiTokens pulumi.StringArrayOutput `pulumi:"apiTokens"`
-	// Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+	// Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
 	Color pulumi.StringPtrOutput `pulumi:"color"`
 	// Environment type: `Live` or `Sandbox`. Immutable after creation — changing it replaces the server. Defaults to `Live`.
 	DeliveryType            pulumi.StringPtrOutput `pulumi:"deliveryType"`
@@ -37,7 +37,7 @@ type Server struct {
 	ServerId          pulumi.IntOutput     `pulumi:"serverId"`
 	ServerLink        pulumi.StringOutput  `pulumi:"serverLink"`
 	SmtpApiActivated  pulumi.BoolPtrOutput `pulumi:"smtpApiActivated"`
-	// Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+	// Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
 	TrackLinks pulumi.StringPtrOutput `pulumi:"trackLinks"`
 	// Enable open tracking for messages by default.
 	TrackOpens pulumi.BoolPtrOutput `pulumi:"trackOpens"`
@@ -94,7 +94,7 @@ func (ServerState) ElementType() reflect.Type {
 }
 
 type serverArgs struct {
-	// Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+	// Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
 	Color *string `pulumi:"color"`
 	// Environment type: `Live` or `Sandbox`. Immutable after creation — changing it replaces the server. Defaults to `Live`.
 	DeliveryType            *string `pulumi:"deliveryType"`
@@ -111,7 +111,7 @@ type serverArgs struct {
 	PostFirstOpenOnly *bool  `pulumi:"postFirstOpenOnly"`
 	RawEmailEnabled   *bool  `pulumi:"rawEmailEnabled"`
 	SmtpApiActivated  *bool  `pulumi:"smtpApiActivated"`
-	// Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+	// Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
 	TrackLinks *string `pulumi:"trackLinks"`
 	// Enable open tracking for messages by default.
 	TrackOpens *bool `pulumi:"trackOpens"`
@@ -119,7 +119,7 @@ type serverArgs struct {
 
 // The set of arguments for constructing a Server resource.
 type ServerArgs struct {
-	// Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+	// Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
 	Color pulumi.StringPtrInput
 	// Environment type: `Live` or `Sandbox`. Immutable after creation — changing it replaces the server. Defaults to `Live`.
 	DeliveryType            pulumi.StringPtrInput
@@ -136,7 +136,7 @@ type ServerArgs struct {
 	PostFirstOpenOnly pulumi.BoolPtrInput
 	RawEmailEnabled   pulumi.BoolPtrInput
 	SmtpApiActivated  pulumi.BoolPtrInput
-	// Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+	// Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
 	TrackLinks pulumi.StringPtrInput
 	// Enable open tracking for messages by default.
 	TrackOpens pulumi.BoolPtrInput
@@ -233,7 +233,7 @@ func (o ServerOutput) ApiTokens() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v *Server) pulumi.StringArrayOutput { return v.ApiTokens }).(pulumi.StringArrayOutput)
 }
 
-// Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.
+// Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.
 func (o ServerOutput) Color() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Server) pulumi.StringPtrOutput { return v.Color }).(pulumi.StringPtrOutput)
 }
@@ -299,7 +299,7 @@ func (o ServerOutput) SmtpApiActivated() pulumi.BoolPtrOutput {
 	return o.ApplyT(func(v *Server) pulumi.BoolPtrOutput { return v.SmtpApiActivated }).(pulumi.BoolPtrOutput)
 }
 
-// Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.
+// Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.
 func (o ServerOutput) TrackLinks() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Server) pulumi.StringPtrOutput { return v.TrackLinks }).(pulumi.StringPtrOutput)
 }
