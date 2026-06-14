@@ -1,4 +1,5 @@
 /bin/
+/dist/
 *.exe
 
 # Pulumi
@@ -7,3 +8,6 @@ Pulumi.*.yaml
 
 # Go
 vendor/
+
+# compiled example binaries
+/examples/simple/postmark-example
