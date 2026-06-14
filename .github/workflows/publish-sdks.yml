@@ -1,16 +1,10 @@
 name: Publish SDKs
 
 # Publishes the SDK packages on a version tag. Only npm is wired up today
-# (@kitsu-io/pulumi-postmark); PyPI / NuGet / Maven Central can be added later as
-# additional jobs (see docs/RELEASING.md). The job builds the SDK unconditionally
-# (so a broken SDK fails the run) and publishes only when NPM_TOKEN is present.
-#
-# Secret (Settings → Secrets and variables → Actions):
-#   NPM_TOKEN   npm automation token with publish rights to the @kitsu-io scope
-#
-# Package versions come from the committed SDK sources, so regenerate them at the
-# new version before tagging (see docs/RELEASING.md):
-#   make codegen PROVIDER_VERSION=X.Y.Z && git commit -am "chore: SDKs for vX.Y.Z"
+# (@kitsu-io/pulumi-postmark), via OIDC "trusted publishing" — no NPM_TOKEN.
+# This requires a ONE-TIME bootstrap publish of the package and a Trusted
+# Publisher configured for it on npmjs.com (repo + this workflow file); see
+# docs/RELEASING.md. PyPI / NuGet / Maven can be added later as more jobs.
 on:
   push:
     tags: ['v*.*.*']
@@ -22,25 +16,22 @@ jobs:
   npm:
     name: npm (@kitsu-io/pulumi-postmark)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # OIDC: required for npm trusted publishing
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '22'
           registry-url: 'https://registry.npmjs.org'
-      - name: Build (yarn install + tsc), matching the Makefile
+      - name: Ensure npm new enough for OIDC trusted publishing
+        run: npm install -g npm@latest # OIDC needs npm >= 11.5.1
+      - name: Build
         run: |
           cd sdk/nodejs
-          yarn install
-          yarn run tsc
-          cp ../../README.md ../../LICENSE package.json yarn.lock bin/
-      - name: Publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          set -euo pipefail
-          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
-            echo "NPM_TOKEN not set — skipping npm publish."; exit 0
-          fi
-          cd sdk/nodejs/bin
-          npm publish --access public
+          npm install
+          npm run build
+          cp ../../README.md ../../LICENSE package.json bin/
+      - name: Publish (OIDC trusted publishing; provenance is automatic)
+        run: cd sdk/nodejs/bin && npm publish --access public

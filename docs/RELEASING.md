@@ -29,8 +29,9 @@ Three workflows under `.github/workflows/`:
   for darwin/linux/windows × amd64/arm64 and publishes a **GitHub Release** with the
   tarballs + checksums; a second job pushes the **`sdk/go/pulumi-postmark/vX.Y.Z`**
   Go-module tag. Uses only the built-in `GITHUB_TOKEN`. **Works with zero setup.**
-- **`publish-sdks.yml`** — on a `vX.Y.Z` tag: builds the npm SDK and publishes it
-  **only if `NPM_TOKEN` is set** (otherwise it logs "skipping" and passes).
+- **`publish-sdks.yml`** — on a `vX.Y.Z` tag: builds and publishes the npm SDK via
+  **OIDC trusted publishing** (no `NPM_TOKEN`; provenance is automatic). Requires a
+  one-time bootstrap publish + a Trusted Publisher configured on npmjs.com (below).
 
 ## Cutting a release
 
@@ -59,13 +60,25 @@ git push origin main v0.2.0
 Pushing the `sdk/go/pulumi-postmark/vX.Y.Z` tag (automated) is the whole "publish".
 The Go module proxy serves it on first `go get`.
 
-### npm — `@kitsu-io/pulumi-postmark`
-1. Make sure the **`kitsu-io`** npm org/scope exists and you can publish to it.
-2. Create an **automation** access token (npmjs.com → Access Tokens) with publish
-   rights to the scope.
-3. Add it as repo secret **`NPM_TOKEN`** (Settings → Secrets and variables → Actions).
+### npm — `@kitsu-io/pulumi-postmark` (OIDC trusted publishing, no token)
 
-The next `vX.Y.Z` tag then publishes `@kitsu-io/pulumi-postmark` (scoped & public).
+`publish-sdks.yml` publishes via OIDC, so there's **no `NPM_TOKEN` secret**. npm
+can't configure a Trusted Publisher until the package exists, so it's a two-step
+one-time bootstrap, then tokenless forever after:
+
+1. **Bootstrap publish** `1.0.0` once, locally, while logged in to the `@kitsu-io`
+   scope (`npm login`). This is the only manual publish you'll ever do:
+   ```bash
+   cd sdk/nodejs && npm install && npm run build
+   cp ../../README.md ../../LICENSE package.json bin/
+   cd bin && npm publish --access public --provenance
+   ```
+2. **Configure the Trusted Publisher** on npmjs.com → the package → Settings →
+   Trusted Publisher → GitHub Actions, with repo `hummingbird-me/pulumi-postmark`
+   and workflow file `publish-sdks.yml`.
+
+After that, every `vX.Y.Z` tag publishes `@kitsu-io/pulumi-postmark` automatically
+via OIDC — short-lived credentials, no stored secret, provenance attestation included.
 
 ## Suggested rollout
 
@@ -74,7 +87,8 @@ The next `vX.Y.Z` tag then publishes `@kitsu-io/pulumi-postmark` (scoped & publi
    pulumi plugin install resource postmark v0.1.0 --server github://api.github.com/hummingbird-me/pulumi-postmark
    ```
    (and Go programs `go get …/sdk/go/pulumi-postmark`). No registry accounts required.
-2. Add **`NPM_TOKEN`** whenever you want `npm install` to work.
+2. Bootstrap-publish npm once + configure the Trusted Publisher (above) to enable
+   tokenless `npm install` for every future release.
 
 ## Adding PyPI / NuGet / Maven later
 
