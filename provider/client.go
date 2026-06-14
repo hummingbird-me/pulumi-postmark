@@ -17,13 +17,17 @@ import (
 
 const defaultBaseURL = "https://api.postmarkapp.com"
 
-// Postmark "resource not found" error codes, from
-// https://postmarkapp.com/developer/api/overview#error-codes
+// Postmark "resource not found" error codes, confirmed against the live API
+// (https://postmarkapp.com/developer/api/overview#error-codes):
 //
-// NOTE: Postmark has no dedicated "server not found" code (the 600-series are
-// query/validation errors), so server deletion drift is detected via the
-// message/HTTP-status fallback in isNotFound. These should be re-confirmed
-// against the live API.
+//   - Domain    -> 510  (HTTP 422)
+//   - Signature -> 501  (HTTP 422)
+//   - Template  -> 1101 (HTTP 422)
+//
+// A missing Server instead returns a bare HTTP 404 with an empty body (there is
+// no dedicated server error code), which the library surfaces as
+// "request failed with status 404: ..."; isNotFound catches that via its
+// status-404 fallback.
 const (
 	errCodeBadAPIToken       int64 = 10
 	errCodeSignatureNotFound int64 = 501
@@ -149,6 +153,16 @@ func deref[T any](p *T, fallback T) T {
 		return fallback
 	}
 	return *p
+}
+
+// orDefault returns def when s is empty. Used for enum-valued Postmark fields
+// (Color, DeliveryType, TrackLinks) that reject an empty string and must carry a
+// valid default when the user leaves them unset.
+func orDefault(s, def string) string {
+	if s == "" {
+		return def
+	}
+	return s
 }
 
 // --- retrying HTTP transport -------------------------------------------------

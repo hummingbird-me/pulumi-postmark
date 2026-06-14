@@ -53,7 +53,7 @@ type ServerState struct {
 func (a *ServerArgs) Annotate(an infer.Annotator) {
 	an.Describe(&a.Name, "Friendly name of the server.")
 	an.Describe(&a.Color, "Color of the server in the Postmark UI server list. One of: "+
-		"Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange.")
+		"Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue.")
 	an.Describe(&a.DeliveryType, "Environment type: `Live` or `Sandbox`. "+
 		"Immutable after creation — changing it replaces the server. Defaults to `Live`.")
 	an.Describe(&a.InboundHookURL, "URL Postmark POSTs to for every inbound email event.")
@@ -61,7 +61,7 @@ func (a *ServerArgs) Annotate(an infer.Annotator) {
 		"domain at `inbound.postmarkapp.com` to receive mail.")
 	an.Describe(&a.InboundSpamThreshold, "Maximum spam score before an inbound message is blocked.")
 	an.Describe(&a.TrackOpens, "Enable open tracking for messages by default.")
-	an.Describe(&a.TrackLinks, "Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly.")
+	an.Describe(&a.TrackLinks, "Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None.")
 }
 
 func (*Server) Create(ctx context.Context, req infer.CreateRequest[ServerArgs]) (infer.CreateResponse[ServerState], error) {
@@ -158,16 +158,16 @@ func (*Server) Delete(ctx context.Context, req infer.DeleteRequest[ServerState])
 func serverCreateRequest(a ServerArgs) postmark.ServerCreateRequest {
 	return postmark.ServerCreateRequest{
 		Name:                       a.Name,
-		Color:                      deref(a.Color, ""),
+		Color:                      orDefault(deref(a.Color, ""), "Blue"),
 		SMTPAPIActivated:           deref(a.SMTPAPIActivated, false),
 		RawEmailEnabled:            deref(a.RawEmailEnabled, false),
-		DeliveryType:               deref(a.DeliveryType, ""),
+		DeliveryType:               orDefault(deref(a.DeliveryType, ""), "Live"),
 		InboundHookURL:             deref(a.InboundHookURL, ""),
 		PostFirstOpenOnly:          deref(a.PostFirstOpenOnly, false),
 		InboundDomain:              deref(a.InboundDomain, ""),
 		InboundSpamThreshold:       int64(deref(a.InboundSpamThreshold, 0)),
 		TrackOpens:                 deref(a.TrackOpens, false),
-		TrackLinks:                 deref(a.TrackLinks, ""),
+		TrackLinks:                 orDefault(deref(a.TrackLinks, ""), "None"),
 		IncludeBounceContentInHook: deref(a.IncludeBounceContentInHook, false),
 		EnableSMTPAPIErrorHooks:    deref(a.EnableSMTPAPIErrorHooks, false),
 	}
@@ -177,7 +177,7 @@ func serverEditRequest(a ServerArgs) postmark.ServerEditRequest {
 	// DeliveryType is intentionally omitted: it is immutable (replaceOnChanges).
 	return postmark.ServerEditRequest{
 		Name:                       a.Name,
-		Color:                      deref(a.Color, ""),
+		Color:                      orDefault(deref(a.Color, ""), "Blue"),
 		SMTPAPIActivated:           deref(a.SMTPAPIActivated, false),
 		RawEmailEnabled:            deref(a.RawEmailEnabled, false),
 		InboundHookURL:             deref(a.InboundHookURL, ""),
@@ -185,7 +185,7 @@ func serverEditRequest(a ServerArgs) postmark.ServerEditRequest {
 		InboundDomain:              deref(a.InboundDomain, ""),
 		InboundSpamThreshold:       int64(deref(a.InboundSpamThreshold, 0)),
 		TrackOpens:                 deref(a.TrackOpens, false),
-		TrackLinks:                 deref(a.TrackLinks, ""),
+		TrackLinks:                 orDefault(deref(a.TrackLinks, ""), "None"),
 		IncludeBounceContentInHook: deref(a.IncludeBounceContentInHook, false),
 		EnableSMTPAPIErrorHooks:    deref(a.EnableSMTPAPIErrorHooks, false),
 	}

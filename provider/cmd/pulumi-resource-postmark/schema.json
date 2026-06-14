@@ -442,7 +442,7 @@
         },
         "color": {
           "type": "string",
-          "description": "Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange."
+          "description": "Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue."
         },
         "deliveryType": {
           "type": "string",
@@ -494,7 +494,7 @@
         },
         "trackLinks": {
           "type": "string",
-          "description": "Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly."
+          "description": "Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None."
         },
         "trackOpens": {
           "type": "boolean",
@@ -512,7 +512,7 @@
       "inputProperties": {
         "color": {
           "type": "string",
-          "description": "Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange."
+          "description": "Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange. Defaults to Blue."
         },
         "deliveryType": {
           "type": "string",
@@ -552,7 +552,7 @@
         },
         "trackLinks": {
           "type": "string",
-          "description": "Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly."
+          "description": "Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly. Defaults to None."
         },
         "trackOpens": {
           "type": "boolean",
