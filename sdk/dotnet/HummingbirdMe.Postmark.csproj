@@ -9,7 +9,7 @@
     <PackageProjectUrl>https://github.com/hummingbird-me/pulumi-postmark</PackageProjectUrl>
     <RepositoryUrl>https://github.com/hummingbird-me/pulumi-postmark</RepositoryUrl>
     <PackageIcon>logo.png</PackageIcon>
-    <Version>1.0.0-alpha.0+dev</Version>
+    <Version>1.0.0</Version>
 
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>

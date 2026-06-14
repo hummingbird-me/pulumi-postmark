@@ -1,6 +1,6 @@
 {
     "name": "@kitsu-io/pulumi-postmark",
-    "version": "1.0.0-alpha.0+dev",
+    "version": "1.0.0",
     "keywords": [
         "postmark",
         "email",
@@ -23,7 +23,7 @@
     "pulumi": {
         "resource": true,
         "name": "postmark",
-        "version": "1.0.0-alpha.0+dev",
+        "version": "1.0.0",
         "server": "github://api.github.com/hummingbird-me/pulumi-postmark"
     }
 }
