@@ -4,7 +4,6 @@ node = "20.19.5"
 "github:pulumi/pulumi" = "3.228.0"
 "github:pulumi/pulumictl" = "0.0.50"
 golangci-lint = "2.11.4"
-"npm:yarn" = "1.22.22"
 
 [settings]
 experimental = true

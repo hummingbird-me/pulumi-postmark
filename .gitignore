@@ -9,7 +9,7 @@
 **/.ionide
 .pulumi
 Pulumi.*.yaml
-yarn.lock
+package-lock.json
 /nuget/
 provider/**/schema-embed.json
 

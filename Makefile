@@ -85,9 +85,9 @@ go_sdk: sdk/go
 
 nodejs_sdk: sdk/nodejs
 	cd ${PACKDIR}/nodejs/ && \
-		yarn install && \
-		yarn run tsc
-	cp README.md LICENSE ${PACKDIR}/nodejs/package.json ${PACKDIR}/nodejs/yarn.lock ${PACKDIR}/nodejs/bin/
+		npm install && \
+		npm run build
+	cp README.md LICENSE ${PACKDIR}/nodejs/package.json ${PACKDIR}/nodejs/bin/
 
 python_sdk: sdk/python
 	cp README.md ${PACKDIR}/python/
@@ -112,7 +112,7 @@ build_sdks: dotnet_sdk go_sdk nodejs_sdk python_sdk java_sdk
 lint:
 	golangci-lint --config .golangci.yml run --fix
 
-install:: install_nodejs_sdk
+install::
 	cp $(WORKING_DIR)/bin/${PROVIDER} ${GOPATH}/bin
 
 GO_TEST := go test -v -count=1 -cover -timeout 2h -parallel ${TESTPARALLELISM}
@@ -135,5 +135,4 @@ install_java_sdk::
 	#target intentionally blank
 
 install_nodejs_sdk::
-	-yarn unlink --cwd $(WORKING_DIR)/sdk/nodejs/bin
-	yarn link --cwd $(WORKING_DIR)/sdk/nodejs/bin
+	cd $(WORKING_DIR)/sdk/nodejs/bin && npm link
