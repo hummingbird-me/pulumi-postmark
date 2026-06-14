@@ -4,7 +4,7 @@
 package config
 
 import (
-	"github.com/hummingbird-me/pulumi-postmark/sdk/go/postmark/internal"
+	"github.com/hummingbird-me/pulumi-postmark/sdk/go/pulumi-postmark/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )

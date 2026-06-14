@@ -7,7 +7,7 @@
 package main
 
 import (
-	"github.com/hummingbird-me/pulumi-postmark/sdk/go/postmark"
+	postmark "github.com/hummingbird-me/pulumi-postmark/sdk/go/pulumi-postmark"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
