@@ -117,9 +117,9 @@ For local provider debugging without installing, use a binary `path` under
 ## Releasing
 
 CI runs on every push/PR; pushing a `vX.Y.Z` tag builds the plugin binaries,
-publishes a GitHub Release, tags the Go SDK, and publishes the language SDKs to
-their registries. See [docs/RELEASING.md](docs/RELEASING.md) for the release flow
-and one-time registry setup.
+publishes a GitHub Release, tags the Go SDK, and publishes the npm SDK
+(`@kitsu-io/pulumi-postmark`). See [docs/RELEASING.md](docs/RELEASING.md) for the
+release flow and one-time setup.
 
 ## License
 

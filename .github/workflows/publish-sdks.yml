@@ -1,17 +1,16 @@
 name: Publish SDKs
 
-# Publishes the per-language SDK packages on a version tag. Each job BUILDS the
-# SDK unconditionally (so a broken SDK fails CI) but only PUBLISHES when the
-# relevant secret is present — so this workflow is safe to merge before you have
-# set any registry up, and each language turns on the moment you add its secret.
+# Publishes the SDK packages on a version tag. Only npm is wired up today
+# (@kitsu-io/pulumi-postmark); PyPI / NuGet / Maven Central can be added later as
+# additional jobs (see docs/RELEASING.md). The npm job builds unconditionally
+# (so a broken SDK fails the run) and publishes only when NPM_TOKEN is present,
+# so it's safe to keep enabled before the secret exists.
 #
-# Secrets used (Settings → Secrets and variables → Actions):
-#   NPM_TOKEN      npm automation token for the @hummingbird-me scope
-#   PYPI_TOKEN     PyPI API token (project- or account-scoped)
-#   NUGET_API_KEY  nuget.org API key
+# Secret (Settings → Secrets and variables → Actions):
+#   NPM_TOKEN   npm automation token with publish rights to the @kitsu-io scope
 #
-# Note: the published package versions come from the committed SDK sources, so
-# regenerate them at the new version before tagging (see docs/RELEASING.md):
+# Package versions come from the committed SDK sources, so regenerate them at the
+# new version before tagging (see docs/RELEASING.md):
 #   make schema build_sdks VERSION=X.Y.Z && git commit -am "chore: SDKs for vX.Y.Z"
 on:
   push:
@@ -22,7 +21,7 @@ permissions:
 
 jobs:
   npm:
-    name: npm (@hummingbird-me/postmark)
+    name: npm (@kitsu-io/pulumi-postmark)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -46,55 +45,3 @@ jobs:
           fi
           cd sdk/nodejs/bin
           npm publish --access public
-
-  pypi:
-    name: PyPI (hummingbird-me-postmark)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-      - name: Build
-        run: |
-          python -m pip install --upgrade build
-          cd sdk/python
-          python -m build
-      - name: Publish
-        env:
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-        run: |
-          set -euo pipefail
-          if [ -z "${PYPI_TOKEN:-}" ]; then
-            echo "PYPI_TOKEN not set — skipping PyPI publish."; exit 0
-          fi
-          python -m pip install --upgrade twine
-          python -m twine upload --non-interactive -u __token__ -p "$PYPI_TOKEN" sdk/python/dist/*
-
-  nuget:
-    name: NuGet (HummingbirdMe.Postmark)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-      - name: Build & pack
-        run: |
-          cd sdk/dotnet
-          dotnet build -c Release
-          dotnet pack -c Release -o out
-      - name: Publish
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        run: |
-          set -euo pipefail
-          if [ -z "${NUGET_API_KEY:-}" ]; then
-            echo "NUGET_API_KEY not set — skipping NuGet publish."; exit 0
-          fi
-          dotnet nuget push "sdk/dotnet/out/*.nupkg" \
-            -k "$NUGET_API_KEY" -s https://api.nuget.org/v3/index.json --skip-duplicate
-
-  # Java / Maven Central is intentionally omitted — it needs a Sonatype Central
-  # account, a verified namespace (e.g. io.github.hummingbird-me), and GPG
-  # signing. See docs/RELEASING.md for how to add it later.
