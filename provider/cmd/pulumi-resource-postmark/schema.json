@@ -194,15 +194,6 @@
         "safeToRemoveRevokedKeyFromDns": {
           "type": "boolean"
         },
-        "spfHost": {
-          "type": "string"
-        },
-        "spfTextValue": {
-          "type": "string"
-        },
-        "spfVerified": {
-          "type": "boolean"
-        },
         "weakDkim": {
           "type": "boolean"
         }
@@ -221,10 +212,7 @@
         "dkimUpdateStatus",
         "safeToRemoveRevokedKeyFromDns",
         "returnPathDomainVerified",
-        "returnPathDomainCnameValue",
-        "spfVerified",
-        "spfHost",
-        "spfTextValue"
+        "returnPathDomainCnameValue"
       ],
       "inputProperties": {
         "name": {
@@ -368,15 +356,6 @@
         "signatureId": {
           "type": "integer"
         },
-        "spfHost": {
-          "type": "string"
-        },
-        "spfTextValue": {
-          "type": "string"
-        },
-        "spfVerified": {
-          "type": "boolean"
-        },
         "triggerResend": {
           "type": "string",
           "description": "Arbitrary value; change it to resend the confirmation email on the next update."
@@ -395,10 +374,7 @@
         "dkimPendingHost",
         "dkimPendingTextValue",
         "returnPathDomainVerified",
-        "returnPathDomainCnameValue",
-        "spfVerified",
-        "spfHost",
-        "spfTextValue"
+        "returnPathDomainCnameValue"
       ],
       "inputProperties": {
         "confirmationPersonalNote": {

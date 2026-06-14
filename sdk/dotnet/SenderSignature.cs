@@ -79,15 +79,6 @@ namespace HummingbirdMe.Postmark
         [Output("signatureId")]
         public Output<int> SignatureId { get; private set; } = null!;
 
-        [Output("spfHost")]
-        public Output<string> SpfHost { get; private set; } = null!;
-
-        [Output("spfTextValue")]
-        public Output<string> SpfTextValue { get; private set; } = null!;
-
-        [Output("spfVerified")]
-        public Output<bool> SpfVerified { get; private set; } = null!;
-
         /// <summary>
         /// Arbitrary value; change it to resend the confirmation email on the next update.
         /// </summary>

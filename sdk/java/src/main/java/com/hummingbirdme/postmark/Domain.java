@@ -173,24 +173,6 @@ public class Domain extends com.pulumi.resources.CustomResource {
     public Output<Boolean> safeToRemoveRevokedKeyFromDns() {
         return this.safeToRemoveRevokedKeyFromDns;
     }
-    @Export(name="spfHost", refs={String.class}, tree="[0]")
-    private Output<String> spfHost;
-
-    public Output<String> spfHost() {
-        return this.spfHost;
-    }
-    @Export(name="spfTextValue", refs={String.class}, tree="[0]")
-    private Output<String> spfTextValue;
-
-    public Output<String> spfTextValue() {
-        return this.spfTextValue;
-    }
-    @Export(name="spfVerified", refs={Boolean.class}, tree="[0]")
-    private Output<Boolean> spfVerified;
-
-    public Output<Boolean> spfVerified() {
-        return this.spfVerified;
-    }
     @Export(name="weakDkim", refs={Boolean.class}, tree="[0]")
     private Output<Boolean> weakDkim;
 

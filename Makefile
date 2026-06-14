@@ -57,10 +57,12 @@ sdk/go: $(SCHEMA_FILE)
 		go mod edit -module=${PROJECT}/${PACKDIR}/go/pulumi-${PACK} && \
 		go mod tidy
 
+PROVIDER_SRC := $(shell find provider -type f -name '*.go') go.mod go.sum
+
 .PHONY: provider
 provider: bin/${PROVIDER}
 
-bin/${PROVIDER}:
+bin/${PROVIDER}: $(PROVIDER_SRC)
 	cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} \
 		-ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION_GENERIC}" \
 		$(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER)

@@ -36,12 +36,9 @@ type Domain struct {
 	// CNAME target for the Return-Path record (typically `pm.mtasv.net`).
 	ReturnPathDomainCnameValue pulumi.StringOutput `pulumi:"returnPathDomainCnameValue"`
 	// Whether the Return-Path CNAME has been verified by Postmark.
-	ReturnPathDomainVerified      pulumi.BoolOutput   `pulumi:"returnPathDomainVerified"`
-	SafeToRemoveRevokedKeyFromDns pulumi.BoolOutput   `pulumi:"safeToRemoveRevokedKeyFromDns"`
-	SpfHost                       pulumi.StringOutput `pulumi:"spfHost"`
-	SpfTextValue                  pulumi.StringOutput `pulumi:"spfTextValue"`
-	SpfVerified                   pulumi.BoolOutput   `pulumi:"spfVerified"`
-	WeakDkim                      pulumi.BoolOutput   `pulumi:"weakDkim"`
+	ReturnPathDomainVerified      pulumi.BoolOutput `pulumi:"returnPathDomainVerified"`
+	SafeToRemoveRevokedKeyFromDns pulumi.BoolOutput `pulumi:"safeToRemoveRevokedKeyFromDns"`
+	WeakDkim                      pulumi.BoolOutput `pulumi:"weakDkim"`
 }
 
 // NewDomain registers a new resource with the given unique name, arguments, and options.
@@ -255,18 +252,6 @@ func (o DomainOutput) ReturnPathDomainVerified() pulumi.BoolOutput {
 
 func (o DomainOutput) SafeToRemoveRevokedKeyFromDns() pulumi.BoolOutput {
 	return o.ApplyT(func(v *Domain) pulumi.BoolOutput { return v.SafeToRemoveRevokedKeyFromDns }).(pulumi.BoolOutput)
-}
-
-func (o DomainOutput) SpfHost() pulumi.StringOutput {
-	return o.ApplyT(func(v *Domain) pulumi.StringOutput { return v.SpfHost }).(pulumi.StringOutput)
-}
-
-func (o DomainOutput) SpfTextValue() pulumi.StringOutput {
-	return o.ApplyT(func(v *Domain) pulumi.StringOutput { return v.SpfTextValue }).(pulumi.StringOutput)
-}
-
-func (o DomainOutput) SpfVerified() pulumi.BoolOutput {
-	return o.ApplyT(func(v *Domain) pulumi.BoolOutput { return v.SpfVerified }).(pulumi.BoolOutput)
 }
 
 func (o DomainOutput) WeakDkim() pulumi.BoolOutput {

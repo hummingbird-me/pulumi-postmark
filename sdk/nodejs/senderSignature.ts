@@ -65,9 +65,6 @@ export class SenderSignature extends pulumi.CustomResource {
     declare public /*out*/ readonly returnPathDomainCnameValue: pulumi.Output<string>;
     declare public /*out*/ readonly returnPathDomainVerified: pulumi.Output<boolean>;
     declare public /*out*/ readonly signatureId: pulumi.Output<number>;
-    declare public /*out*/ readonly spfHost: pulumi.Output<string>;
-    declare public /*out*/ readonly spfTextValue: pulumi.Output<string>;
-    declare public /*out*/ readonly spfVerified: pulumi.Output<boolean>;
     /**
      * Arbitrary value; change it to resend the confirmation email on the next update.
      */
@@ -107,9 +104,6 @@ export class SenderSignature extends pulumi.CustomResource {
             resourceInputs["returnPathDomainCnameValue"] = undefined /*out*/;
             resourceInputs["returnPathDomainVerified"] = undefined /*out*/;
             resourceInputs["signatureId"] = undefined /*out*/;
-            resourceInputs["spfHost"] = undefined /*out*/;
-            resourceInputs["spfTextValue"] = undefined /*out*/;
-            resourceInputs["spfVerified"] = undefined /*out*/;
         } else {
             resourceInputs["confirmationPersonalNote"] = undefined /*out*/;
             resourceInputs["confirmed"] = undefined /*out*/;
@@ -127,9 +121,6 @@ export class SenderSignature extends pulumi.CustomResource {
             resourceInputs["returnPathDomainCnameValue"] = undefined /*out*/;
             resourceInputs["returnPathDomainVerified"] = undefined /*out*/;
             resourceInputs["signatureId"] = undefined /*out*/;
-            resourceInputs["spfHost"] = undefined /*out*/;
-            resourceInputs["spfTextValue"] = undefined /*out*/;
-            resourceInputs["spfVerified"] = undefined /*out*/;
             resourceInputs["triggerResend"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);

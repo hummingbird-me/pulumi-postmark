@@ -93,14 +93,17 @@ resolvable `serverId`), since reading a template is a server-scoped operation.
 ## Development
 
 ```bash
-make provider     # build bin/pulumi-resource-postmark
-make install      # build + copy the plugin into $GOPATH/bin (on the local plugin path)
-make schema       # regenerate the checked-in schema.json
-make gen_go_sdk   # generate the Go SDK into sdk/go
-make build_sdks   # generate all language SDKs (go, python, nodejs, dotnet, java)
-make test         # go test ./...
-make lint         # go vet + gofmt check
+make provider       # build bin/pulumi-resource-postmark
+make install        # build + copy the plugin into $GOPATH/bin (on the local plugin path)
+make codegen        # regenerate schema.json + all SDK sources
+make build_sdks     # compile all language SDKs (go, nodejs, python, dotnet, java)
+make test_provider  # run provider unit tests
+make lint           # golangci-lint
 ```
+
+This repo follows the [pulumi-provider-boilerplate](https://github.com/pulumi/pulumi-provider-boilerplate)
+layout and tooling (root Go module, `pulumictl`-based versioning, GoReleaser).
+Tool versions are pinned in `.mise.toml` / `.pulumi.version`.
 
 To try the example against a real (sandbox) Postmark account:
 

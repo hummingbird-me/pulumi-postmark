@@ -124,9 +124,6 @@ class Domain(pulumi.CustomResource):
             __props__.__dict__["return_path_domain_cname_value"] = None
             __props__.__dict__["return_path_domain_verified"] = None
             __props__.__dict__["safe_to_remove_revoked_key_from_dns"] = None
-            __props__.__dict__["spf_host"] = None
-            __props__.__dict__["spf_text_value"] = None
-            __props__.__dict__["spf_verified"] = None
             __props__.__dict__["weak_dkim"] = None
         replace_on_changes = pulumi.ResourceOptions(replace_on_changes=["name"])
         opts = pulumi.ResourceOptions.merge(opts, replace_on_changes)
@@ -166,9 +163,6 @@ class Domain(pulumi.CustomResource):
         __props__.__dict__["return_path_domain_cname_value"] = None
         __props__.__dict__["return_path_domain_verified"] = None
         __props__.__dict__["safe_to_remove_revoked_key_from_dns"] = None
-        __props__.__dict__["spf_host"] = None
-        __props__.__dict__["spf_text_value"] = None
-        __props__.__dict__["spf_verified"] = None
         __props__.__dict__["weak_dkim"] = None
         return Domain(resource_name, opts=opts, __props__=__props__)
 
@@ -268,21 +262,6 @@ class Domain(pulumi.CustomResource):
     @pulumi.getter(name="safeToRemoveRevokedKeyFromDns")
     def safe_to_remove_revoked_key_from_dns(self) -> pulumi.Output[_builtins.bool]:
         return pulumi.get(self, "safe_to_remove_revoked_key_from_dns")
-
-    @_builtins.property
-    @pulumi.getter(name="spfHost")
-    def spf_host(self) -> pulumi.Output[_builtins.str]:
-        return pulumi.get(self, "spf_host")
-
-    @_builtins.property
-    @pulumi.getter(name="spfTextValue")
-    def spf_text_value(self) -> pulumi.Output[_builtins.str]:
-        return pulumi.get(self, "spf_text_value")
-
-    @_builtins.property
-    @pulumi.getter(name="spfVerified")
-    def spf_verified(self) -> pulumi.Output[_builtins.bool]:
-        return pulumi.get(self, "spf_verified")
 
     @_builtins.property
     @pulumi.getter(name="weakDkim")

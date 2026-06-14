@@ -72,9 +72,6 @@ export class Domain extends pulumi.CustomResource {
      */
     declare public /*out*/ readonly returnPathDomainVerified: pulumi.Output<boolean>;
     declare public /*out*/ readonly safeToRemoveRevokedKeyFromDns: pulumi.Output<boolean>;
-    declare public /*out*/ readonly spfHost: pulumi.Output<string>;
-    declare public /*out*/ readonly spfTextValue: pulumi.Output<string>;
-    declare public /*out*/ readonly spfVerified: pulumi.Output<boolean>;
     declare public /*out*/ readonly weakDkim: pulumi.Output<boolean>;
 
     /**
@@ -105,9 +102,6 @@ export class Domain extends pulumi.CustomResource {
             resourceInputs["returnPathDomainCnameValue"] = undefined /*out*/;
             resourceInputs["returnPathDomainVerified"] = undefined /*out*/;
             resourceInputs["safeToRemoveRevokedKeyFromDns"] = undefined /*out*/;
-            resourceInputs["spfHost"] = undefined /*out*/;
-            resourceInputs["spfTextValue"] = undefined /*out*/;
-            resourceInputs["spfVerified"] = undefined /*out*/;
             resourceInputs["weakDkim"] = undefined /*out*/;
         } else {
             resourceInputs["dkimHost"] = undefined /*out*/;
@@ -124,9 +118,6 @@ export class Domain extends pulumi.CustomResource {
             resourceInputs["returnPathDomainCnameValue"] = undefined /*out*/;
             resourceInputs["returnPathDomainVerified"] = undefined /*out*/;
             resourceInputs["safeToRemoveRevokedKeyFromDns"] = undefined /*out*/;
-            resourceInputs["spfHost"] = undefined /*out*/;
-            resourceInputs["spfTextValue"] = undefined /*out*/;
-            resourceInputs["spfVerified"] = undefined /*out*/;
             resourceInputs["weakDkim"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);

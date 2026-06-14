@@ -37,9 +37,6 @@ type SenderSignature struct {
 	ReturnPathDomainCnameValue pulumi.StringOutput    `pulumi:"returnPathDomainCnameValue"`
 	ReturnPathDomainVerified   pulumi.BoolOutput      `pulumi:"returnPathDomainVerified"`
 	SignatureId                pulumi.IntOutput       `pulumi:"signatureId"`
-	SpfHost                    pulumi.StringOutput    `pulumi:"spfHost"`
-	SpfTextValue               pulumi.StringOutput    `pulumi:"spfTextValue"`
-	SpfVerified                pulumi.BoolOutput      `pulumi:"spfVerified"`
 	// Arbitrary value; change it to resend the confirmation email on the next update.
 	TriggerResend pulumi.StringPtrOutput `pulumi:"triggerResend"`
 }
@@ -279,18 +276,6 @@ func (o SenderSignatureOutput) ReturnPathDomainVerified() pulumi.BoolOutput {
 
 func (o SenderSignatureOutput) SignatureId() pulumi.IntOutput {
 	return o.ApplyT(func(v *SenderSignature) pulumi.IntOutput { return v.SignatureId }).(pulumi.IntOutput)
-}
-
-func (o SenderSignatureOutput) SpfHost() pulumi.StringOutput {
-	return o.ApplyT(func(v *SenderSignature) pulumi.StringOutput { return v.SpfHost }).(pulumi.StringOutput)
-}
-
-func (o SenderSignatureOutput) SpfTextValue() pulumi.StringOutput {
-	return o.ApplyT(func(v *SenderSignature) pulumi.StringOutput { return v.SpfTextValue }).(pulumi.StringOutput)
-}
-
-func (o SenderSignatureOutput) SpfVerified() pulumi.BoolOutput {
-	return o.ApplyT(func(v *SenderSignature) pulumi.BoolOutput { return v.SpfVerified }).(pulumi.BoolOutput)
 }
 
 // Arbitrary value; change it to resend the confirmation email on the next update.

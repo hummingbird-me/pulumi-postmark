@@ -161,24 +161,6 @@ public class SenderSignature extends com.pulumi.resources.CustomResource {
     public Output<Integer> signatureId() {
         return this.signatureId;
     }
-    @Export(name="spfHost", refs={String.class}, tree="[0]")
-    private Output<String> spfHost;
-
-    public Output<String> spfHost() {
-        return this.spfHost;
-    }
-    @Export(name="spfTextValue", refs={String.class}, tree="[0]")
-    private Output<String> spfTextValue;
-
-    public Output<String> spfTextValue() {
-        return this.spfTextValue;
-    }
-    @Export(name="spfVerified", refs={Boolean.class}, tree="[0]")
-    private Output<Boolean> spfVerified;
-
-    public Output<Boolean> spfVerified() {
-        return this.spfVerified;
-    }
     /**
      * Arbitrary value; change it to resend the confirmation email on the next update.
      * 

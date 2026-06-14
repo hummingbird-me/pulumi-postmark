@@ -204,9 +204,6 @@ class SenderSignature(pulumi.CustomResource):
             __props__.__dict__["return_path_domain_cname_value"] = None
             __props__.__dict__["return_path_domain_verified"] = None
             __props__.__dict__["signature_id"] = None
-            __props__.__dict__["spf_host"] = None
-            __props__.__dict__["spf_text_value"] = None
-            __props__.__dict__["spf_verified"] = None
         replace_on_changes = pulumi.ResourceOptions(replace_on_changes=["fromEmail"])
         opts = pulumi.ResourceOptions.merge(opts, replace_on_changes)
         super(SenderSignature, __self__).__init__(
@@ -247,9 +244,6 @@ class SenderSignature(pulumi.CustomResource):
         __props__.__dict__["return_path_domain_cname_value"] = None
         __props__.__dict__["return_path_domain_verified"] = None
         __props__.__dict__["signature_id"] = None
-        __props__.__dict__["spf_host"] = None
-        __props__.__dict__["spf_text_value"] = None
-        __props__.__dict__["spf_verified"] = None
         __props__.__dict__["trigger_resend"] = None
         return SenderSignature(resource_name, opts=opts, __props__=__props__)
 
@@ -350,21 +344,6 @@ class SenderSignature(pulumi.CustomResource):
     @pulumi.getter(name="signatureId")
     def signature_id(self) -> pulumi.Output[_builtins.int]:
         return pulumi.get(self, "signature_id")
-
-    @_builtins.property
-    @pulumi.getter(name="spfHost")
-    def spf_host(self) -> pulumi.Output[_builtins.str]:
-        return pulumi.get(self, "spf_host")
-
-    @_builtins.property
-    @pulumi.getter(name="spfTextValue")
-    def spf_text_value(self) -> pulumi.Output[_builtins.str]:
-        return pulumi.get(self, "spf_text_value")
-
-    @_builtins.property
-    @pulumi.getter(name="spfVerified")
-    def spf_verified(self) -> pulumi.Output[_builtins.bool]:
-        return pulumi.get(self, "spf_verified")
 
     @_builtins.property
     @pulumi.getter(name="triggerResend")
