@@ -19,7 +19,7 @@
     },
     "go": {
       "generateResourceContainerTypes": true,
-      "importBasePath": "github.com/hummingbird-me/pulumi-postmark/sdk/go/postmark",
+      "importBasePath": "github.com/hummingbird-me/pulumi-postmark/sdk/go/pulumi-postmark",
       "respectSchemaVersion": true
     },
     "nodejs": {

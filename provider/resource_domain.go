@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/mrz1836/postmark"
+
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
@@ -46,11 +47,6 @@ type DomainState struct {
 	// Return-Path
 	ReturnPathDomainVerified   bool   `pulumi:"returnPathDomainVerified"`
 	ReturnPathDomainCNAMEValue string `pulumi:"returnPathDomainCnameValue"`
-
-	// SPF (deprecated by Postmark; surfaced read-only for completeness).
-	SPFVerified  bool   `pulumi:"spfVerified"`
-	SPFHost      string `pulumi:"spfHost"`
-	SPFTextValue string `pulumi:"spfTextValue"`
 }
 
 func (a *DomainArgs) Annotate(an infer.Annotator) {
@@ -175,8 +171,5 @@ func domainStateFromAPI(d postmark.DomainDetails) DomainState {
 		SafeToRemoveRevokedKeyFromDNS: d.SafeToRemoveRevokedKeyFromDNS,
 		ReturnPathDomainVerified:      d.ReturnPathDomainVerified,
 		ReturnPathDomainCNAMEValue:    d.ReturnPathDomainCNAMEValue,
-		SPFVerified:                   d.SPFVerified,
-		SPFHost:                       d.SPFHost,
-		SPFTextValue:                  d.SPFTextValue,
 	}
 }

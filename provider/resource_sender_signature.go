@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/mrz1836/postmark"
+
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
@@ -39,7 +40,7 @@ type SenderSignatureState struct {
 	EmailAddress string `pulumi:"emailAddress"`
 	Confirmed    bool   `pulumi:"confirmed"`
 
-	// DKIM / Return-Path / SPF status (inherited from the address's domain).
+	// DKIM / Return-Path status (inherited from the address's domain).
 	DKIMVerified               bool   `pulumi:"dkimVerified"`
 	DKIMHost                   string `pulumi:"dkimHost"`
 	DKIMTextValue              string `pulumi:"dkimTextValue"`
@@ -47,9 +48,6 @@ type SenderSignatureState struct {
 	DKIMPendingTextValue       string `pulumi:"dkimPendingTextValue"`
 	ReturnPathDomainVerified   bool   `pulumi:"returnPathDomainVerified"`
 	ReturnPathDomainCNAMEValue string `pulumi:"returnPathDomainCnameValue"`
-	SPFVerified                bool   `pulumi:"spfVerified"`
-	SPFHost                    string `pulumi:"spfHost"`
-	SPFTextValue               string `pulumi:"spfTextValue"`
 }
 
 func (a *SenderSignatureArgs) Annotate(an infer.Annotator) {
@@ -186,8 +184,5 @@ func signatureStateFromAPI(d postmark.SenderSignatureDetails, triggerResend *str
 		DKIMPendingTextValue:       d.DKIMPendingTextValue,
 		ReturnPathDomainVerified:   d.ReturnPathDomainVerified,
 		ReturnPathDomainCNAMEValue: d.ReturnPathDomainCNAMEValue,
-		SPFVerified:                d.SPFVerified,
-		SPFHost:                    d.SPFHost,
-		SPFTextValue:               d.SPFTextValue,
 	}
 }

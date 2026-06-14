@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/mrz1836/postmark"
+
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
 

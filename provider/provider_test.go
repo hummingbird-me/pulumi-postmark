@@ -11,7 +11,7 @@ import (
 // TestProviderBuilds ensures the provider's schema can be inferred from all
 // resource definitions. Provider() panics on a schema-generation error, so this
 // catches malformed pulumi struct tags, duplicate tokens, and similar regressions.
-func TestProviderBuilds(t *testing.T) {
+func TestProviderBuilds(_ *testing.T) {
 	_ = Provider()
 }
 
