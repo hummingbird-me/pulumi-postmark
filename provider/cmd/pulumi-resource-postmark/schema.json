@@ -1,0 +1,669 @@
+{
+  "name": "postmark",
+  "displayName": "Postmark",
+  "description": "A Pulumi provider for managing Postmark email infrastructure: servers, domains, sender signatures and templates.",
+  "keywords": [
+    "postmark",
+    "email",
+    "transactional-email",
+    "category/network"
+  ],
+  "homepage": "https://github.com/hummingbird-me/pulumi-postmark",
+  "license": "Apache-2.0",
+  "repository": "https://github.com/hummingbird-me/pulumi-postmark",
+  "pluginDownloadURL": "github://api.github.com/hummingbird-me/pulumi-postmark",
+  "namespace": "hummingbird-me",
+  "language": {
+    "csharp": {
+      "respectSchemaVersion": true
+    },
+    "go": {
+      "generateResourceContainerTypes": true,
+      "importBasePath": "github.com/hummingbird-me/pulumi-postmark/sdk/go/postmark",
+      "respectSchemaVersion": true
+    },
+    "nodejs": {
+      "respectSchemaVersion": true
+    },
+    "python": {
+      "pyproject": {
+        "enabled": true
+      },
+      "respectSchemaVersion": true
+    }
+  },
+  "config": {
+    "variables": {
+      "accountToken": {
+        "type": "string",
+        "description": "Postmark Account API token (X-Postmark-Account-Token). Required to manage Servers, Domains and Sender Signatures. May also be set via the POSTMARK_ACCOUNT_TOKEN environment variable.",
+        "default": "",
+        "defaultInfo": {
+          "environment": [
+            "POSTMARK_ACCOUNT_TOKEN"
+          ]
+        },
+        "secret": true
+      },
+      "baseUrl": {
+        "type": "string",
+        "description": "Base URL of the Postmark API. Defaults to https://api.postmarkapp.com. May also be set via the POSTMARK_BASE_URL environment variable (useful for testing).",
+        "default": "https://api.postmarkapp.com",
+        "defaultInfo": {
+          "environment": [
+            "POSTMARK_BASE_URL"
+          ]
+        }
+      },
+      "serverToken": {
+        "type": "string",
+        "description": "Default Postmark Server API token (X-Postmark-Server-Token) used for Template operations when a Template does not set its own `serverToken`/`serverId`. Only useful when all Templates live on a single server. May also be set via the POSTMARK_SERVER_TOKEN environment variable.",
+        "default": "",
+        "defaultInfo": {
+          "environment": [
+            "POSTMARK_SERVER_TOKEN"
+          ]
+        },
+        "secret": true
+      }
+    }
+  },
+  "provider": {
+    "properties": {
+      "accountToken": {
+        "type": "string",
+        "description": "Postmark Account API token (X-Postmark-Account-Token). Required to manage Servers, Domains and Sender Signatures. May also be set via the POSTMARK_ACCOUNT_TOKEN environment variable.",
+        "default": "",
+        "defaultInfo": {
+          "environment": [
+            "POSTMARK_ACCOUNT_TOKEN"
+          ]
+        },
+        "secret": true
+      },
+      "baseUrl": {
+        "type": "string",
+        "description": "Base URL of the Postmark API. Defaults to https://api.postmarkapp.com. May also be set via the POSTMARK_BASE_URL environment variable (useful for testing).",
+        "default": "https://api.postmarkapp.com",
+        "defaultInfo": {
+          "environment": [
+            "POSTMARK_BASE_URL"
+          ]
+        }
+      },
+      "serverToken": {
+        "type": "string",
+        "description": "Default Postmark Server API token (X-Postmark-Server-Token) used for Template operations when a Template does not set its own `serverToken`/`serverId`. Only useful when all Templates live on a single server. May also be set via the POSTMARK_SERVER_TOKEN environment variable.",
+        "default": "",
+        "defaultInfo": {
+          "environment": [
+            "POSTMARK_SERVER_TOKEN"
+          ]
+        },
+        "secret": true
+      }
+    },
+    "inputProperties": {
+      "accountToken": {
+        "type": "string",
+        "description": "Postmark Account API token (X-Postmark-Account-Token). Required to manage Servers, Domains and Sender Signatures. May also be set via the POSTMARK_ACCOUNT_TOKEN environment variable.",
+        "default": "",
+        "defaultInfo": {
+          "environment": [
+            "POSTMARK_ACCOUNT_TOKEN"
+          ]
+        },
+        "secret": true
+      },
+      "baseUrl": {
+        "type": "string",
+        "description": "Base URL of the Postmark API. Defaults to https://api.postmarkapp.com. May also be set via the POSTMARK_BASE_URL environment variable (useful for testing).",
+        "default": "https://api.postmarkapp.com",
+        "defaultInfo": {
+          "environment": [
+            "POSTMARK_BASE_URL"
+          ]
+        }
+      },
+      "serverToken": {
+        "type": "string",
+        "description": "Default Postmark Server API token (X-Postmark-Server-Token) used for Template operations when a Template does not set its own `serverToken`/`serverId`. Only useful when all Templates live on a single server. May also be set via the POSTMARK_SERVER_TOKEN environment variable.",
+        "default": "",
+        "defaultInfo": {
+          "environment": [
+            "POSTMARK_SERVER_TOKEN"
+          ]
+        },
+        "secret": true
+      }
+    }
+  },
+  "resources": {
+    "postmark:index:Domain": {
+      "properties": {
+        "dkimHost": {
+          "type": "string",
+          "description": "Hostname of the currently-active DKIM record (populated after verification)."
+        },
+        "dkimPendingHost": {
+          "type": "string",
+          "description": "Hostname for the DKIM TXT record to publish (publish this first)."
+        },
+        "dkimPendingTextValue": {
+          "type": "string",
+          "description": "Value for the DKIM TXT record to publish."
+        },
+        "dkimRevokedHost": {
+          "type": "string"
+        },
+        "dkimRevokedTextValue": {
+          "type": "string"
+        },
+        "dkimTextValue": {
+          "type": "string",
+          "description": "Value of the currently-active DKIM record."
+        },
+        "dkimUpdateStatus": {
+          "type": "string"
+        },
+        "dkimVerified": {
+          "type": "boolean",
+          "description": "Whether DKIM has been verified by Postmark."
+        },
+        "domainId": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string",
+          "description": "The domain name to send from (e.g. `example.com`). Immutable — changing it replaces the domain.",
+          "replaceOnChanges": true
+        },
+        "returnPathDomain": {
+          "type": "string",
+          "description": "Custom Return-Path subdomain (e.g. `pm-bounces.example.com`). Must be a subdomain of `name` and have a CNAME pointing at the value of `returnPathDomainCnameValue`."
+        },
+        "returnPathDomainCnameValue": {
+          "type": "string",
+          "description": "CNAME target for the Return-Path record (typically `pm.mtasv.net`)."
+        },
+        "returnPathDomainVerified": {
+          "type": "boolean",
+          "description": "Whether the Return-Path CNAME has been verified by Postmark."
+        },
+        "safeToRemoveRevokedKeyFromDns": {
+          "type": "boolean"
+        },
+        "spfHost": {
+          "type": "string"
+        },
+        "spfTextValue": {
+          "type": "string"
+        },
+        "spfVerified": {
+          "type": "boolean"
+        },
+        "weakDkim": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "domainId",
+        "dkimVerified",
+        "weakDkim",
+        "dkimHost",
+        "dkimTextValue",
+        "dkimPendingHost",
+        "dkimPendingTextValue",
+        "dkimRevokedHost",
+        "dkimRevokedTextValue",
+        "dkimUpdateStatus",
+        "safeToRemoveRevokedKeyFromDns",
+        "returnPathDomainVerified",
+        "returnPathDomainCnameValue",
+        "spfVerified",
+        "spfHost",
+        "spfTextValue"
+      ],
+      "inputProperties": {
+        "name": {
+          "type": "string",
+          "description": "The domain name to send from (e.g. `example.com`). Immutable — changing it replaces the domain.",
+          "replaceOnChanges": true
+        },
+        "returnPathDomain": {
+          "type": "string",
+          "description": "Custom Return-Path subdomain (e.g. `pm-bounces.example.com`). Must be a subdomain of `name` and have a CNAME pointing at the value of `returnPathDomainCnameValue`."
+        }
+      },
+      "requiredInputs": [
+        "name"
+      ]
+    },
+    "postmark:index:DomainVerification": {
+      "properties": {
+        "dkimHost": {
+          "type": "string"
+        },
+        "dkimTextValue": {
+          "type": "string"
+        },
+        "dkimVerified": {
+          "type": "boolean"
+        },
+        "domainId": {
+          "type": "integer",
+          "description": "ID of the Domain to verify (wire from `domain.domainId`). Immutable.",
+          "replaceOnChanges": true
+        },
+        "pollTimeoutSeconds": {
+          "type": "integer",
+          "description": "Maximum seconds to poll for verification to succeed while DNS propagates. Defaults to 0 (a single, non-blocking attempt)."
+        },
+        "returnPathDomainVerified": {
+          "type": "boolean"
+        },
+        "trigger": {
+          "type": "string",
+          "description": "Arbitrary value; change it to force re-verification on the next update."
+        },
+        "verifyDkim": {
+          "type": "boolean",
+          "description": "Whether to verify DKIM. Defaults to true."
+        },
+        "verifyReturnPath": {
+          "type": "boolean",
+          "description": "Whether to verify the Return-Path CNAME. Defaults to true."
+        }
+      },
+      "required": [
+        "domainId",
+        "dkimVerified",
+        "returnPathDomainVerified",
+        "dkimHost",
+        "dkimTextValue"
+      ],
+      "inputProperties": {
+        "domainId": {
+          "type": "integer",
+          "description": "ID of the Domain to verify (wire from `domain.domainId`). Immutable.",
+          "replaceOnChanges": true
+        },
+        "pollTimeoutSeconds": {
+          "type": "integer",
+          "description": "Maximum seconds to poll for verification to succeed while DNS propagates. Defaults to 0 (a single, non-blocking attempt)."
+        },
+        "trigger": {
+          "type": "string",
+          "description": "Arbitrary value; change it to force re-verification on the next update."
+        },
+        "verifyDkim": {
+          "type": "boolean",
+          "description": "Whether to verify DKIM. Defaults to true."
+        },
+        "verifyReturnPath": {
+          "type": "boolean",
+          "description": "Whether to verify the Return-Path CNAME. Defaults to true."
+        }
+      },
+      "requiredInputs": [
+        "domainId"
+      ]
+    },
+    "postmark:index:SenderSignature": {
+      "properties": {
+        "confirmationPersonalNote": {
+          "type": "string",
+          "description": "Optional note (max 400 chars) included in the confirmation email."
+        },
+        "confirmed": {
+          "type": "boolean",
+          "description": "Whether the signature has been confirmed. Postmark requires a human to click the confirmation email; run `pulumi refresh` to observe this flipping to true."
+        },
+        "dkimHost": {
+          "type": "string"
+        },
+        "dkimPendingHost": {
+          "type": "string"
+        },
+        "dkimPendingTextValue": {
+          "type": "string"
+        },
+        "dkimTextValue": {
+          "type": "string"
+        },
+        "dkimVerified": {
+          "type": "boolean"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "emailAddress": {
+          "type": "string"
+        },
+        "fromEmail": {
+          "type": "string",
+          "description": "The email address to sign. Immutable — changing it replaces the signature.",
+          "replaceOnChanges": true
+        },
+        "name": {
+          "type": "string",
+          "description": "From name associated with the signature."
+        },
+        "replyToEmail": {
+          "type": "string",
+          "description": "Optional Reply-To email address."
+        },
+        "returnPathDomain": {
+          "type": "string",
+          "description": "Optional custom Return-Path subdomain of the From address's domain."
+        },
+        "returnPathDomainCnameValue": {
+          "type": "string"
+        },
+        "returnPathDomainVerified": {
+          "type": "boolean"
+        },
+        "signatureId": {
+          "type": "integer"
+        },
+        "spfHost": {
+          "type": "string"
+        },
+        "spfTextValue": {
+          "type": "string"
+        },
+        "spfVerified": {
+          "type": "boolean"
+        },
+        "triggerResend": {
+          "type": "string",
+          "description": "Arbitrary value; change it to resend the confirmation email on the next update."
+        }
+      },
+      "required": [
+        "fromEmail",
+        "name",
+        "signatureId",
+        "domain",
+        "emailAddress",
+        "confirmed",
+        "dkimVerified",
+        "dkimHost",
+        "dkimTextValue",
+        "dkimPendingHost",
+        "dkimPendingTextValue",
+        "returnPathDomainVerified",
+        "returnPathDomainCnameValue",
+        "spfVerified",
+        "spfHost",
+        "spfTextValue"
+      ],
+      "inputProperties": {
+        "confirmationPersonalNote": {
+          "type": "string",
+          "description": "Optional note (max 400 chars) included in the confirmation email."
+        },
+        "fromEmail": {
+          "type": "string",
+          "description": "The email address to sign. Immutable — changing it replaces the signature.",
+          "replaceOnChanges": true
+        },
+        "name": {
+          "type": "string",
+          "description": "From name associated with the signature."
+        },
+        "replyToEmail": {
+          "type": "string",
+          "description": "Optional Reply-To email address."
+        },
+        "returnPathDomain": {
+          "type": "string",
+          "description": "Optional custom Return-Path subdomain of the From address's domain."
+        },
+        "triggerResend": {
+          "type": "string",
+          "description": "Arbitrary value; change it to resend the confirmation email on the next update."
+        }
+      },
+      "requiredInputs": [
+        "fromEmail",
+        "name"
+      ]
+    },
+    "postmark:index:Server": {
+      "properties": {
+        "apiTokens": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "secret": true
+        },
+        "color": {
+          "type": "string",
+          "description": "Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange."
+        },
+        "deliveryType": {
+          "type": "string",
+          "description": "Environment type: `Live` or `Sandbox`. Immutable after creation — changing it replaces the server. Defaults to `Live`.",
+          "replaceOnChanges": true
+        },
+        "enableSmtpApiErrorHooks": {
+          "type": "boolean"
+        },
+        "inboundAddress": {
+          "type": "string"
+        },
+        "inboundDomain": {
+          "type": "string",
+          "description": "Inbound domain for MX setup. Point an MX record for this domain at `inbound.postmarkapp.com` to receive mail."
+        },
+        "inboundHash": {
+          "type": "string"
+        },
+        "inboundHookUrl": {
+          "type": "string",
+          "description": "URL Postmark POSTs to for every inbound email event."
+        },
+        "inboundSpamThreshold": {
+          "type": "integer",
+          "description": "Maximum spam score before an inbound message is blocked."
+        },
+        "includeBounceContentInHook": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string",
+          "description": "Friendly name of the server."
+        },
+        "postFirstOpenOnly": {
+          "type": "boolean"
+        },
+        "rawEmailEnabled": {
+          "type": "boolean"
+        },
+        "serverId": {
+          "type": "integer"
+        },
+        "serverLink": {
+          "type": "string"
+        },
+        "smtpApiActivated": {
+          "type": "boolean"
+        },
+        "trackLinks": {
+          "type": "string",
+          "description": "Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly."
+        },
+        "trackOpens": {
+          "type": "boolean",
+          "description": "Enable open tracking for messages by default."
+        }
+      },
+      "required": [
+        "name",
+        "serverId",
+        "apiTokens",
+        "serverLink",
+        "inboundAddress",
+        "inboundHash"
+      ],
+      "inputProperties": {
+        "color": {
+          "type": "string",
+          "description": "Color of the server in the Postmark UI server list. One of: Purple, Blue, Turquoise, Green, Red, Yellow, Grey, Orange."
+        },
+        "deliveryType": {
+          "type": "string",
+          "description": "Environment type: `Live` or `Sandbox`. Immutable after creation — changing it replaces the server. Defaults to `Live`.",
+          "replaceOnChanges": true
+        },
+        "enableSmtpApiErrorHooks": {
+          "type": "boolean"
+        },
+        "inboundDomain": {
+          "type": "string",
+          "description": "Inbound domain for MX setup. Point an MX record for this domain at `inbound.postmarkapp.com` to receive mail."
+        },
+        "inboundHookUrl": {
+          "type": "string",
+          "description": "URL Postmark POSTs to for every inbound email event."
+        },
+        "inboundSpamThreshold": {
+          "type": "integer",
+          "description": "Maximum spam score before an inbound message is blocked."
+        },
+        "includeBounceContentInHook": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string",
+          "description": "Friendly name of the server."
+        },
+        "postFirstOpenOnly": {
+          "type": "boolean"
+        },
+        "rawEmailEnabled": {
+          "type": "boolean"
+        },
+        "smtpApiActivated": {
+          "type": "boolean"
+        },
+        "trackLinks": {
+          "type": "string",
+          "description": "Link tracking mode: None, HtmlAndText, HtmlOnly or TextOnly."
+        },
+        "trackOpens": {
+          "type": "boolean",
+          "description": "Enable open tracking for messages by default."
+        }
+      },
+      "requiredInputs": [
+        "name"
+      ]
+    },
+    "postmark:index:Template": {
+      "properties": {
+        "active": {
+          "type": "boolean"
+        },
+        "alias": {
+          "type": "string",
+          "description": "Optional unique alias (within the server). Must start with a letter; may contain letters, digits, '.', '-' and '_'."
+        },
+        "associatedServerId": {
+          "type": "integer"
+        },
+        "htmlBody": {
+          "type": "string",
+          "description": "HTML body. Required unless `textBody` is set."
+        },
+        "layoutTemplate": {
+          "type": "string",
+          "description": "Alias of a Layout to wrap this Standard template (set to \"\" to disassociate)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the template."
+        },
+        "serverId": {
+          "type": "integer",
+          "description": "ID of the server this template belongs to; the provider looks up its token via the account token. Immutable — changing it replaces the template.",
+          "replaceOnChanges": true
+        },
+        "serverToken": {
+          "type": "string",
+          "description": "Server API token of the server this template belongs to. Wire from `server.apiTokens[0]`. Falls back to `serverId` lookup, then the provider `serverToken` config.",
+          "secret": true
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject line. Required for Standard templates; not allowed for Layouts."
+        },
+        "templateId": {
+          "type": "integer"
+        },
+        "templateType": {
+          "type": "string",
+          "description": "`Standard` (default) or `Layout`. Immutable — changing it replaces the template.",
+          "replaceOnChanges": true
+        },
+        "textBody": {
+          "type": "string",
+          "description": "Plain-text body. Required unless `htmlBody` is set."
+        }
+      },
+      "required": [
+        "name",
+        "templateId",
+        "active",
+        "associatedServerId"
+      ],
+      "inputProperties": {
+        "alias": {
+          "type": "string",
+          "description": "Optional unique alias (within the server). Must start with a letter; may contain letters, digits, '.', '-' and '_'."
+        },
+        "htmlBody": {
+          "type": "string",
+          "description": "HTML body. Required unless `textBody` is set."
+        },
+        "layoutTemplate": {
+          "type": "string",
+          "description": "Alias of a Layout to wrap this Standard template (set to \"\" to disassociate)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the template."
+        },
+        "serverId": {
+          "type": "integer",
+          "description": "ID of the server this template belongs to; the provider looks up its token via the account token. Immutable — changing it replaces the template.",
+          "replaceOnChanges": true
+        },
+        "serverToken": {
+          "type": "string",
+          "description": "Server API token of the server this template belongs to. Wire from `server.apiTokens[0]`. Falls back to `serverId` lookup, then the provider `serverToken` config.",
+          "secret": true
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject line. Required for Standard templates; not allowed for Layouts."
+        },
+        "templateType": {
+          "type": "string",
+          "description": "`Standard` (default) or `Layout`. Immutable — changing it replaces the template.",
+          "replaceOnChanges": true
+        },
+        "textBody": {
+          "type": "string",
+          "description": "Plain-text body. Required unless `htmlBody` is set."
+        }
+      },
+      "requiredInputs": [
+        "name"
+      ]
+    }
+  }
+}
