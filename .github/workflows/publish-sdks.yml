@@ -2,16 +2,15 @@ name: Publish SDKs
 
 # Publishes the SDK packages on a version tag. Only npm is wired up today
 # (@kitsu-io/pulumi-postmark); PyPI / NuGet / Maven Central can be added later as
-# additional jobs (see docs/RELEASING.md). The npm job builds unconditionally
-# (so a broken SDK fails the run) and publishes only when NPM_TOKEN is present,
-# so it's safe to keep enabled before the secret exists.
+# additional jobs (see docs/RELEASING.md). The job builds the SDK unconditionally
+# (so a broken SDK fails the run) and publishes only when NPM_TOKEN is present.
 #
 # Secret (Settings → Secrets and variables → Actions):
 #   NPM_TOKEN   npm automation token with publish rights to the @kitsu-io scope
 #
 # Package versions come from the committed SDK sources, so regenerate them at the
 # new version before tagging (see docs/RELEASING.md):
-#   make schema build_sdks VERSION=X.Y.Z && git commit -am "chore: SDKs for vX.Y.Z"
+#   make codegen PROVIDER_VERSION=X.Y.Z && git commit -am "chore: SDKs for vX.Y.Z"
 on:
   push:
     tags: ['v*.*.*']
@@ -29,12 +28,12 @@ jobs:
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
-      - name: Build
+      - name: Build (yarn install + tsc), matching the Makefile
         run: |
           cd sdk/nodejs
-          npm install
-          npm run build
-          cp ../../README.md package.json bin/
+          yarn install
+          yarn run tsc
+          cp ../../README.md ../../LICENSE package.json yarn.lock bin/
       - name: Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

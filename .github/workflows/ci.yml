@@ -10,61 +10,44 @@ permissions:
   contents: read
 
 jobs:
-  provider:
-    name: Provider (build · vet · fmt · test · schema)
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-go@v5
         with:
-          go-version-file: provider/go.mod
-          cache-dependency-path: provider/go.sum
-
-      - name: Install Pulumi CLI
+          go-version-file: go.mod
+      - name: Install golangci-lint
         run: |
-          curl -fsSL https://get.pulumi.com | sh
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh \
+            | sh -s -- -b "$(go env GOPATH)/bin" v2.11.4
+      - name: Lint
+        run: "$(go env GOPATH)/bin/golangci-lint run --config .golangci.yml ./provider/..."
+
+  provider:
+    name: Build · test · schema
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Install Pulumi CLI + pulumictl
+        run: |
+          curl -fsSL https://get.pulumi.com | sh -s -- --version "$(cat .pulumi.version)"
           echo "$HOME/.pulumi/bin" >> "$GITHUB_PATH"
-
-      - name: gofmt
-        run: |
-          unformatted="$(gofmt -l provider)"
-          if [ -n "$unformatted" ]; then
-            echo "::error::These files are not gofmt-clean:"; echo "$unformatted"; exit 1
-          fi
-
-      - name: go vet
-        run: cd provider && go vet ./...
-
+          go install github.com/pulumi/pulumictl/cmd/pulumictl@v0.0.50
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
       - name: Test
-        run: cd provider && go test ./...
-
+        run: make test_provider
       - name: Schema is up to date
         run: |
-          make schema
-          if ! git diff --exit-code -- provider/cmd/pulumi-resource-postmark/schema.json; then
-            echo "::error::schema.json is stale — run 'make schema' and commit the result."
+          make provider
+          pulumi package get-schema "$PWD/bin/pulumi-resource-postmark" | jq 'del(.version)' > /tmp/schema.json
+          if ! diff -u provider/cmd/pulumi-resource-postmark/schema.json /tmp/schema.json; then
+            echo "::error::schema.json is stale — run 'make codegen' and commit the result."
             exit 1
           fi
-
-  sdk-go:
-    name: Go SDK (build)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: sdk/go.mod
-          cache-dependency-path: sdk/go.sum
-      - run: cd sdk && go build ./...
-
-  example:
-    name: Example (build)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: examples/simple/go.mod
-          cache-dependency-path: examples/simple/go.sum
-      - run: cd examples/simple && go build ./...
+      - name: Example builds
+        run: cd examples/simple && go build ./...

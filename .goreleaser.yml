@@ -1,0 +1,43 @@
+# GoReleaser config for the Postmark Pulumi provider plugin.
+# Adapted from pulumi-provider-boilerplate, minus the Pulumi-internal S3 CDN
+# upload and Windows code-signing. Releases the plugin binaries as GitHub Release
+# assets named the way the Pulumi engine expects:
+#   pulumi-resource-postmark-vX.Y.Z-<os>-<arch>.tar.gz
+version: 2
+project_name: pulumi-postmark
+builds:
+  - id: provider
+    dir: provider
+    main: ./cmd/pulumi-resource-postmark/
+    binary: pulumi-resource-postmark
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/hummingbird-me/pulumi-postmark/provider.Version={{ .Version }}
+archives:
+  - id: archive
+    ids:
+      - provider
+    name_template: "{{ .Binary }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"
+    formats:
+      - tar.gz
+checksum:
+  name_template: "{{ .ProjectName }}-{{ .Tag }}-checksums.txt"
+snapshot:
+  version_template: "{{ .Tag }}-SNAPSHOT"
+changelog:
+  disable: true
+release:
+  github:
+    owner: hummingbird-me
+    name: pulumi-postmark
+  prerelease: auto

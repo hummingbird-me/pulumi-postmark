@@ -1,9 +1,9 @@
 name: Release
 
-# Fires when you push a semver tag, e.g. `git tag v0.1.0 && git push origin v0.1.0`.
-# Builds the plugin binaries for every platform, publishes a GitHub Release with
-# them (which is where the schema's `pluginDownloadURL` fetches from), and tags
-# the Go SDK submodule so `go get .../sdk@vX.Y.Z` resolves.
+# Fires on a semver tag, e.g. `git tag v0.1.0 && git push origin v0.1.0`.
+# GoReleaser builds the plugin binaries for every platform and publishes a GitHub
+# Release with them (where the schema's pluginDownloadURL fetches from). A second
+# job tags the Go SDK module so `go get .../sdk/go/pulumi-postmark@vX.Y.Z` resolves.
 on:
   push:
     tags: ['v*.*.*']
@@ -12,57 +12,38 @@ permissions:
   contents: write
 
 jobs:
-  plugin:
-    name: Plugin binaries + GitHub Release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: provider/go.mod
-          cache-dependency-path: provider/go.sum
-
-      - name: Build cross-platform plugin tarballs
-        run: |
-          set -euo pipefail
-          VERSION="${GITHUB_REF_NAME#v}"
-          mkdir -p dist
-          for platform in linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64 windows/arm64; do
-            os="${platform%/*}"; arch="${platform#*/}"
-            bin="pulumi-resource-postmark"
-            [ "$os" = "windows" ] && bin="${bin}.exe"
-            echo "==> building ${os}/${arch}"
-            ( cd provider && GOOS="$os" GOARCH="$arch" CGO_ENABLED=0 go build \
-                -ldflags "-s -w -X github.com/hummingbird-me/pulumi-postmark/provider/version.Version=${VERSION}" \
-                -o "${GITHUB_WORKSPACE}/dist/${bin}" ./cmd/pulumi-resource-postmark )
-            tar -czf "dist/pulumi-resource-postmark-v${VERSION}-${os}-${arch}.tar.gz" -C dist "$bin"
-            rm -f "dist/${bin}"
-          done
-          ( cd dist && sha256sum *.tar.gz > "pulumi-postmark-v${VERSION}-checksums.txt" )
-          ls -la dist
-
-      - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/*
-          generate_release_notes: true
-          fail_on_unmatched_files: true
-
-  go-sdk-tag:
-    name: Tag Go SDK module (sdk/vX.Y.Z)
-    needs: plugin
+  release:
+    name: GoReleaser (plugin binaries + GitHub Release)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Push sdk/<version> tag
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: '~> v2'
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  go-sdk-tag:
+    name: Tag Go SDK module
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Push sdk/go/pulumi-postmark/<version> tag
         run: |
           set -euo pipefail
-          TAG="${GITHUB_REF_NAME}"   # vX.Y.Z
-          if git rev-parse -q --verify "refs/tags/sdk/${TAG}" >/dev/null; then
-            echo "sdk/${TAG} already exists — nothing to do."; exit 0
+          SDK_TAG="sdk/go/pulumi-postmark/${GITHUB_REF_NAME}"
+          if git rev-parse -q --verify "refs/tags/${SDK_TAG}" >/dev/null; then
+            echo "${SDK_TAG} already exists — nothing to do."; exit 0
           fi
-          git tag "sdk/${TAG}"
-          git push origin "sdk/${TAG}"
+          git tag "${SDK_TAG}"
+          git push origin "${SDK_TAG}"
